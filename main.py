@@ -18,10 +18,11 @@ def cross_validation(agents, num_episodes=100):
     return res
 
 if __name__ == '__main__':
-    agents_names = ['RandomAgent', 'Q-learning-v1']
+    agents_names = ['RandomAgent', 'Q-learning-v1', 'DDQN_v1']
     agents = {
         "RandomAgent": RandomAgent("RandomAgent"),
-        "Q-learning-v1": Naive_Qlearning_agent("Q-learning-v1")
+        "Q-learning-v1": Naive_Qlearning_agent("Q-learning-v1"),
+        "DDQN_v1": Double_Qlearning_agent("DDQN_v1")
     }
     
     for k, v in agents.items():

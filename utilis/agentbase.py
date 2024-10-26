@@ -38,6 +38,7 @@ class Agent(nn.Module):
         '''
         Save the agent's model to a file.
         '''
+        self.to('cpu')
         with open(self.model_path, 'wb') as f:
             pickle.dump(self, f)
     

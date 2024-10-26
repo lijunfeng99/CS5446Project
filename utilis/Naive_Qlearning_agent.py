@@ -85,7 +85,7 @@ class Naive_Qlearning_agent(Agent):
             if episode % self.config.TARGET_UPDATE == 0:
                 self.epsilon = max(self.epsilon * self.config.EPSILON_DECAY, self.config.EPSILON_END)
             win += 1 if total_reward > 0 else 0
-            tbar.set_postfix(Rewaed= total_reward, win= win / (episode + 1), loss= loss)
+            tbar.set_postfix(Reward= total_reward, win= win / (episode + 1), loss= loss)
             self.rewards.append(total_reward)
             self.loss.append(loss)
 

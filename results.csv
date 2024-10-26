@@ -1,3 +1,7 @@
 agent1,agent2,mean_reward
-RandomAgent,Q-learning-v1,-0.76
-Q-learning-v1,RandomAgent,0.66
+RandomAgent,Q-learning-v1,-0.56
+RandomAgent,DDQN_v1,-0.59
+Q-learning-v1,RandomAgent,0.64
+Q-learning-v1,DDQN_v1,-0.39
+DDQN_v1,RandomAgent,0.66
+DDQN_v1,Q-learning-v1,0.31
