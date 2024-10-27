@@ -1,0 +1,14 @@
+{
+    "input_shape": 42,
+    "num_actions": 7,
+    "env_name": "connectx",
+    "MODEL_NAME": "Monte-Carlo-agent-v1",
+    "INVALID_MOVE_PENALTY": -2,
+    "NUM_EPISODES": 50000,
+    "EPSILON_START": 0.9,
+    "EPSILON_END": 0.01,
+    "EPSILON_DECAY": 0.99,
+    "TARGET_UPDATE": 100,
+    "GAMMA": 0.99,
+    "DEVICE": "mps"
+}
