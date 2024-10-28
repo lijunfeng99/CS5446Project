@@ -13,7 +13,7 @@ class Config(object):
         # The train config
         self.MODEL_NAME = MODEL_NAME
         self.INVALID_MOVE_PENALTY = -2
-        self.NUM_EPISODES = 50000
+        self.NUM_EPISODES = 100
 
         self.EPSILON_START = 0.9
         self.EPSILON_END = 0.01

@@ -107,6 +107,7 @@ class Double_Qlearning_agent(Agent):
 
             if (episode + 1) % self.config.TARGET_UPDATE == 0:
                 self._update_target_network()
+        self.memory = [] # Clear memory after training
 
     def _update_target_network(self):
         self.target_model.load_state_dict(self.model.state_dict())
@@ -142,3 +143,12 @@ class Double_Qlearning_agent(Agent):
         self.optimizer.step()
         
         return loss.item()
+    
+    def save_torch_model(self, path):
+        torch.save(self.model.cpu().state_dict(), path + "model.pth")
+        torch.save(self.target_model.cpu().state_dict(), path + "target_model.pth")
+    
+    def load_torch_model(self, path):
+        self.model.load_state_dict(torch.load(path + "model.pth"))
+        self.target_model.load_state_dict(torch.load(path + "target_model.pth"))
+        self.to(self.config.DEVICE)

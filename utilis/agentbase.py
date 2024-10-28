@@ -1,6 +1,8 @@
 import os
 import pickle
+import torch
 import torch.nn as nn
+import numpy as np
 import matplotlib.pyplot as plt
 from kaggle_environments.utils import Struct
 from kaggle_environments import make
@@ -12,7 +14,7 @@ class Agent(nn.Module):
     def __init__(self, model_name : str):
         super().__init__()
         self.MODEL_NAME = model_name
-        self.model_path = os.path.join(MODEL_PATH, self.MODEL_NAME) + ".pkl"
+        self.model_path = os.path.join(MODEL_PATH, self.MODEL_NAME)
         self.config = Config(MODEL_NAME= model_name, auto_load=True)
         self.env = make(self.config.env_name, debug=False)
 
@@ -39,16 +41,28 @@ class Agent(nn.Module):
         Save the agent's model to a file.
         '''
         self.to('cpu')
-        with open(self.model_path, 'wb') as f:
-            pickle.dump(self, f)
+        os.makedirs(self.model_path, exist_ok=True)
+
+        torch.save(self.state_dict(), os.path.join(self.model_path, "model.pkl"))
+
+        # 遍历每一个变量
+        for key in self.__dict__:
+            if isinstance(self.__dict__[key], list):
+                with open(os.path.join(self.model_path, str(key) + ".npy"), 'wb') as f:
+                    np.save(f, np.array(self.__dict__[key]))
     
     def load(self):
         '''
         Load the agent
         '''
-        with open(self.model_path, 'rb') as f:
-            loaded_agent = pickle.load(f)
-            self.__dict__.update(loaded_agent.__dict__)
+        file_list = os.listdir(self.model_path)
+        self.load_state_dict(torch.load(os.path.join(self.model_path, "model.pkl")))
+        for file in file_list:
+            if file.endswith(".npy"):
+                key = file.split(".")[0]
+                with open(os.path.join(self.model_path, file), 'rb') as f:
+                    self.__dict__[key] = np.load(f)
+
         self.to(self.config.DEVICE)
     
     def test(self):
@@ -59,7 +73,7 @@ class Agent(nn.Module):
         configuration = {'episodeSteps': 1000, 'actTimeout': 2, 'runTimeout': 1200, 'columns': 7, 'rows': 6, 'inarow': 4, 'agentTimeout': 60, 'timeout': 2}
         action = self(Struct(**observation), Struct(**configuration))
         return action
-    
+
     def train(self):
         '''
         Train the agent's model.
@@ -100,5 +114,4 @@ class Agent(nn.Module):
         plt.tight_layout()
         plt.show()
 
-        fig.savefig(os.path.join(MODEL_PATH, self.MODEL_NAME) + ".png")
-
+        fig.savefig(os.path.join(self.model_path,"results.png"))

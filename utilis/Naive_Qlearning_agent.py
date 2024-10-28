@@ -43,6 +43,8 @@ class Naive_Qlearning_agent(Agent):
         self.to(self.config.DEVICE)
         train_env = self.env.train([None, "random"]) # random, negamax
         win = 0
+        sum_loss = 0
+        sum_reward = 0
 
         tbar = tqdm(range(self.config.NUM_EPISODES))
         for episode in tbar:
@@ -85,9 +87,13 @@ class Naive_Qlearning_agent(Agent):
             if episode % self.config.TARGET_UPDATE == 0:
                 self.epsilon = max(self.epsilon * self.config.EPSILON_DECAY, self.config.EPSILON_END)
             win += 1 if total_reward > 0 else 0
-            tbar.set_postfix(Reward= total_reward, win= win / (episode + 1), loss= loss)
+
+            sum_loss += loss
+            sum_reward += total_reward
+            tbar.set_postfix(Reward= round(sum_reward / (episode + 1), 3), win= round(win / (episode + 1), 3), loss= round(sum_loss / (episode + 1), 3))
             self.rewards.append(total_reward)
             self.loss.append(loss)
+        self.memory = []
 
     def _clear_memory(self):
         # 只保留最后一部分的经验
